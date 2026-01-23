@@ -1,0 +1,41 @@
+Crop,FAO_Code,N_Input,P_Input,K_Input
+Wheat,15,0.046,0.041,0.0435
+Barley,44,0.044,0.043,0.0435
+Rye,71,0.05,0.046,0.048
+Oats,75,0.055,0.055,0.055
+Grain maize,56,0.006,0.009,0.0075
+Triticale,97,0.038,0.049,0.0435
+Potatoes,116,0.094,0.083,0.0885
+"Bambara beans, dry",203,0.078,0.095,0.0865
+"Beans, dry",176,0.078,0.095,0.0865
+"Broad beans and horse beans, dry",181,0.078,0.095,0.0865
+"Chick peas, dry",191,0.078,0.095,0.0865
+"Cow peas, dry",195,0.078,0.095,0.0865
+"Lentils, dry",201,0.078,0.095,0.0865
+Lupins,210,0.078,0.095,0.0865
+Other pulses n.e.c.,211,0.078,0.095,0.0865
+"Peas, dry",187,0.078,0.095,0.0865
+"Pigeon peas, dry",197,0.078,0.095,0.0865
+Vetches,205,0.078,0.095,0.0865
+Castor oil seeds,265,0.005,0.004,0.0045
+"Coconuts, in shell",249,0.005,0.004,0.0045
+"Groundnuts, excluding shelled",242,0.005,0.004,0.0045
+Hempseed,336,0.005,0.004,0.0045
+Jojoba seeds,277,0.005,0.004,0.0045
+Kapok fruit,310,0.005,0.004,0.0045
+Karite nuts (sheanuts),263,0.005,0.004,0.0045
+Linseed,333,0.005,0.004,0.0045
+Melonseed,299,0.005,0.004,0.0045
+Mustard seed,292,0.005,0.004,0.0045
+Oil palm fruit,254,0.005,0.004,0.0045
+Olives,260,0.005,0.004,0.0045
+"Other oil seeds, n.e.c.",339,0.005,0.004,0.0045
+Poppy seed,296,0.005,0.004,0.0045
+Rape or colza seed,270,0.005,0.004,0.0045
+Safflower seed,280,0.005,0.004,0.0045
+"Seed cotton, unginned",328,0.005,0.004,0.0045
+Sesame seed,289,0.005,0.004,0.0045
+Soya beans,236,0.02,0.02,0.02
+Sunflower seed,267,0.005,0.004,0.0045
+Tallowtree seeds,305,0.005,0.004,0.0045
+Tung nuts,275,0.005,0.004,0.0045
