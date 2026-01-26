@@ -1,10 +1,14 @@
 # This R script calculate N Balance OUTPUTS by country/year
 # Author: Nathan Wanner
 # Date: December 4, 2017
+# Updated comments Jan 26, 2026
+# This R script calculates the components of the nutrient balance through the
+# use of auxillary scripts and the outputs from crop harvest.
 library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(zoo)
+# Read the area/country hierarchical tables
 areas_regions_hierarchy = read.csv("./Tables/areas_regions_hierarchy.csv")
 areas_regions_hierarchy = select(areas_regions_hierarchy,
                                  AreaCode,
@@ -21,15 +25,26 @@ m49 = read.csv("./Tables/m49.csv")
 areas_merge = read.csv("./Tables/areas_merge_modified.csv")
 FAO_Country_Group_M49 = read.csv("./Tables/FAO_Country_Group_M49_No_China.csv")
 Crops_CPC = read.csv("./Tables/Production_Item_Codes.csv")
+# Read the auxiliary functions
 source("./Functions/Data_Aggregate.R")
 source("./Functions/Data_Aggregate_Biodiversity_2025.R")
 # Fodder_Crops = read.csv("../Data/Fodder_Crops_Production.csv")
-source('./R/Feed_older.R')
+# Calculate removal from pasture from R script below.
+# This code is complimentary and not used for current dissemination
+source('./R/Feed.R')
+# Calculate and harmonize the inputs
 source('./R/NutrientBalance_Inputs_2025.R')
+# Import the deposition data and harmonize
 source('./R/NDeposition_2025.R')
+# Calculate item group averages to be used for gap-filling for missing nutrient
+# concentration information
 source('./R/Item_Aggregates_Nutrients_2025.R')
+# Calculate the seed according to the food balance sheets.
+# This code is auxiliary and the actual seed calculations used for
+# dissemination are performed further down in the code of this R script
 source('./R/Seed_2025.R')
 
+# Import cropland and agricultural land information.
 Agr_Area = read.csv("./Data/Inputs_LandUse_E_All_Data_(Normalized).csv")
 # Agr_Area = dplyr::rename(Agr_Area,
 #                          Area.Code = Area.Code..FAO.,

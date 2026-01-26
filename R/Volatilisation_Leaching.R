@@ -1,5 +1,6 @@
 # Author: Nathan Wanner
 # Get leaching and voltalisation for ESB domain from manure and synthetic fertilizers
+# Updated comments Jan 26, 2026
 
 # Here is 2025 version read from internal FAOSTAT
 Manure = read.csv(gzfile("./Data/Emissions_livestock_E_All_Data_(Normalized).gz"))

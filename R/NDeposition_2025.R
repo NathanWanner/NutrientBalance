@@ -1,3 +1,5 @@
+# Updated comments Jan 26, 2026
+
 Land_Area = read.csv("./Data/Inputs_LandUse_E_All_Data_(Normalized)_2024.csv")
 # Land_Area = dplyr::rename(Land_Area,
 #                           Area.Code = Area.Code..FAO.,

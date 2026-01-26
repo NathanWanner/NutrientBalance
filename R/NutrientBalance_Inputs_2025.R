@@ -1,6 +1,7 @@
 # This R script calculate N Balance INPUTS by country/year
 # Author: WANNERn Wanner
 # Date: December 4, 2017
+# Updated comments Jan 26, 2026
 library(dplyr)
 area_regions_hieararchy = read.csv("./Tables/areas_regions_hierarchy.csv")
 FAO_Country_Region = read.csv("./Tables/FAO_Country_Region.csv")
