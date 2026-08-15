@@ -23,7 +23,7 @@ N_Removal$Nutrient.Code[N_Removal$Nutrient=="N_Grain"] = 3102
 N_Removal$Nutrient.Code[N_Removal$Nutrient=="P_Grain"] = 3103
 N_Removal$Nutrient.Code[N_Removal$Nutrient=="K_Grain"] = 3104
 
-Item_Group = read.csv("./Data/Item_Group_Updated.csv")
+Item_Group = read.csv("./Data/Item_Group_Updated.csv",colClasses = c("CPCCode" = "character"))
 Item_Group = dplyr::left_join(Crops_2014,select(Item_Group,-Item),by="Item.Code")
 Item_Group = dplyr::right_join(Item_Group,N_Removal,by="Item.Code")
 # Item_Group = Item_Group %>%

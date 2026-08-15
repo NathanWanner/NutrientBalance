@@ -1,0 +1,8 @@
+current: production
+# current: qa
+
+production:
+  server: https://sws.aws.fao.org:8181
+  token: 6e5e5b9f-aedd-49a0-ad42-67b9596c0a01 # generic prod token
+
+  

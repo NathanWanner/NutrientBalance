@@ -13,7 +13,7 @@ FAO_Country_Group_M49 = read.csv("./Tables/FAO_Country_Group_M49_No_China.csv")
 m49 = read.csv("./Tables/m49.csv")
 areas_merge = read.csv("./Tables/areas_merge_modified.csv")
 StartYear=1961
-EndYear=2023
+EndYear=2024
 
 source("./Functions/Data_Aggregate.R")
 FAO_Country_Region = read.csv("./Tables/FAO_Country_Region.csv")
@@ -52,6 +52,13 @@ Crop_Residues_Coefficients$Nutrient.Code[Crop_Residues_Coefficients$Element == "
 Crop_Residues_Coefficients$Nutrient.Code[Crop_Residues_Coefficients$Element == "K removed with crop residue"] = 3104
 Crop_Residues_Coefficients = dplyr::rename(Crop_Residues_Coefficients,Residual_Removal_Per_Ha=Value)
 
+# 2026 update - no new data for crope residues removal - carry forward most recent rate
+Crop_Residues_Coefficients = Crop_Residues_Coefficients %>%
+  group_by(Area.Code,Nutrient.Code) %>% 
+  complete(Year = min(Year):2024) %>%
+  tidyr::fill(Residual_Removal_Per_Ha ,.direction=c("down")) %>%
+  ungroup()
+
 Crop_Residues_Removal = inner_join(Agr_Area,Crop_Residues_Coefficients,by=c("Area.Code","Year"))
 
 Crop_Residues_Removal =  Crop_Residues_Removal %>%
@@ -73,7 +80,7 @@ Crop_Residues_Removal = rbind(Crop_Residues_Removal,Crop_Residues_Removal_China)
 Crop_Residues_Removal = gather(Crop_Residues_Removal,Element,Value,Residual_Removal_Total_Cropland)
 
 StartYear=1961
-EndYear=2023
+EndYear=2024
 Crop_Residues_Removal = dplyr::rename(Crop_Residues_Removal,Item.Code=Nutrient.Code)
 Crop_Residues_Removal = select(Crop_Residues_Removal,-Element)
 Crop_Residues_Removal$Item[Crop_Residues_Removal$Item.Code==3102]="Nitrogen"
@@ -84,7 +91,7 @@ Crop_Residues_Removal = arrange(Crop_Residues_Removal,Area.Code,Item.Code,Year,V
 
 Crop_Residues_Removal = Data_Update(StartYear,EndYear,Crop_Residues_Removal)
 
-save(Crop_Residues_Removal,file="./Output/Crop_Residues_Removal_Disseminate_China_3.RData")
+save(Crop_Residues_Removal,file="./Output/Crop_Residues_Removal_Disseminate_China_3_Update.RData")
 
 
 

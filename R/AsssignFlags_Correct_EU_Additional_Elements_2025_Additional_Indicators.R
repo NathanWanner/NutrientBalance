@@ -2,8 +2,8 @@
 library(dplyr)
 library(tidyr)
 
-Data = read.csv("./Output/Data_Output_10Nov2025.csv")
-load(file="./Output/Crop_Residues_Removal_Disseminate_China_3.RData")
+Data = read.csv("./Output/Data_Output_14Aug2026.csv")
+load(file="./Output/Crop_Residues_Removal_Disseminate_China_3_Update.RData")
 Data = select(Data,-X)
 Crop_Residues_Removal = dplyr::rename(Crop_Residues_Removal,Value_Crop_Residues_Removal = Value)
 Data = left_join(Data,Crop_Residues_Removal)
@@ -18,9 +18,9 @@ Data$CropLand[Data$Area.Code==273&Data$Year>=2006&Data$Year<=2014] = Data$CropLa
 # Nutrient updates for Ireland and New Zealand
 Data$Value_Fert_IFA = as.numeric(Data$Value_Fert_IFA)
 Data = Data %>%
-  rowwise() %>%
-  mutate(Value_Fert = mean(c(Value_Fert,Value_Fert_IFA),na.rm=TRUE))%>%
-  ungroup() 
+  dplyr::rowwise() %>%
+  dplyr::mutate(Value_Fert = mean(c(Value_Fert,Value_Fert_IFA),na.rm=TRUE)) %>%
+  dplyr::ungroup() 
 Data$Value_Fert[is.nan(Data$Value_Fert)] = NA
 
 # Use Value_Seed_2, but if there is no data, use Value_Seed
@@ -119,7 +119,7 @@ Data_Cropland = dplyr::rename(Data_Cropland,
 Data_Cropland$Boundary = "Cropland"
 Data_Cropland = as.data.frame(Data_Cropland)
 
-Fert_IFA = read.csv("./Data/ifa_countries_2025.csv")
+Fert_IFA = read.csv("./Data/ifa_countries_2026.csv")
 Fert_IFA = filter(Fert_IFA,!is.na(Year))
 
 # 2 countries with crop removal and no fertilizer data
@@ -344,7 +344,7 @@ Data_Aggregates = select(Data_Aggregates,-Flag,-Country.Group)
 Data_Aggregates = dplyr::rename(Data_Aggregates,M49.Code=Country.Group.Code.M49)
 Data = rbind(Data,Data_Aggregates)
 
-Fert = read.csv("C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2025/Data/Inputs_FertilizersNutrient_E_All_Data_(Normalized).csv")
+Fert = read.csv("./Data/Inputs_FertilizersNutrient_E_All_Data_(Normalized).csv")
 Fert = filter(Fert,Element.Code==5157,Item.Code%in%c(3102,3103,3104),Area.Code<400)
 Fert = select(Fert,Area.Code..M49.,Item.Code,Year,Value,Flag)
 Fert = mutate(Fert,Fert_Value = Value*1000)
@@ -468,11 +468,11 @@ List_Mask_Countries  = unique(c(unique(rbind(List_No_Fert_Yes_Production_1,List_
 Data_FAOSTAT = filter(Data,!`Area Code`%in%List_Mask_Countries)
 Data_FAOSTAT = select(Data_FAOSTAT,`Domain Code`,`Domain`,M49.Code,`Area Code`,Country,`Element Code`,`Element`,`Item Code`,`Item`,`Year Code`,`Year`,`Unit`,`Value`,`Flag`)
 Data_FAOSTAT = filter(Data_FAOSTAT,!is.na(Value))
-write.csv(Data_FAOSTAT, file=gzfile("./Output/ESB_2025_All_7.gz"),row.names=FALSE)
+write.csv(Data_FAOSTAT, file=gzfile("./Output/ESB_2026_All.gz"),row.names=FALSE)
 Data_FAOSTAT = filter(Data_FAOSTAT,`Element Code`%in%c(7275,7276,7280,7281,7282,7283,7290,7291,7292),`Item Code`%in%c(5078,5077,5076,5087,5062,5079,5080,5081,5082,5083,5086,5180,5088))
 
 # Take out the countries for which we have crop removal but no fertilizer data or fertilizer data is 0 (43 countries)
 # Also take out countries for which we have fertlizer data but no crop removal (1 country) 
 # List_Mask_Countries  = unique(c(unique(rbind(List_No_Fert_Yes_Production_1,List_Yes_Fert_No_Production_2)$Area.Code),c(List_Masked_Countries_Fert)))
-write.csv(Data_FAOSTAT,file=gzfile("./Output/ESB_Data_2025_7.gz"),row.names=FALSE)
+write.csv(Data_FAOSTAT,file=gzfile("./Output/ESB_Data_2026.gz"),row.names=FALSE)
 

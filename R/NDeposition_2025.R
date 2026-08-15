@@ -1,6 +1,6 @@
 # Updated comments Jan 26, 2026
 
-Land_Area = read.csv("./Data/Inputs_LandUse_E_All_Data_(Normalized)_2024.csv")
+Land_Area = read.csv("./Data/Inputs_LandUse_E_All_Data_(Normalized).csv")
 # Land_Area = dplyr::rename(Land_Area,
 #                           Area.Code = Area.Code..FAO.,
 #                           Item.Code = Item.Code..FAO.,
@@ -13,7 +13,7 @@ Land_Area = select(Land_Area,
                    Item.Code,
                    Item)
 StartYear=1961
-EndYear=2023
+EndYear=2024
 Land_Area = Data_Update(StartYear,EndYear,Land_Area)
 Land_Area = select(Land_Area,-Item.Code)
 Land_Area = spread(Land_Area,Item,Value)
@@ -29,6 +29,14 @@ N_Deposition = gather(N_Deposition,Year,Value,-m49)
 N_Deposition$Year = as.numeric(substr(N_Deposition$Year,2,5))
 N_Deposition = left_join(N_Deposition,select(m49,Country.Code,M49.Code),by=c("m49"="M49.Code"))
 N_Deposition = select(rename(N_Deposition,Area.Code=Country.Code),-m49)
+
+# Update 2026 - no new data for deposition - update rates through 2024
+N_Deposition = N_Deposition %>%
+  group_by(Area.Code) %>% 
+  complete(Year = min(Year):2024) %>%
+  tidyr::fill(Value,.direction=c("down")) %>%
+  ungroup()
+
 N_Deposition = left_join(N_Deposition,Land_Area)
 # N Deposition was in kg/ha
 # Cropland is in 1000 ha
@@ -52,9 +60,4 @@ N_Deposition_China = N_Deposition %>%
 N_Deposition = rbind(N_Deposition,N_Deposition_China)
 N_Deposition = as.data.frame(N_Deposition)
 # Temporary until updated manure data is received
-N_Deposition = N_Deposition %>%
-  group_by(Area.Code,NutrientCode) %>% 
-  complete(Year = min(Year):2023) %>%
-  tidyr::fill(Value_Deposition,.direction=c("down")) %>%
-  ungroup()
 

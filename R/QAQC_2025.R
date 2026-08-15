@@ -10,29 +10,30 @@ library(dplyr)
   area_regions = read.csv("./Tables/areas_regions_hierarchy_With_China.csv")
   FAO_Country_Region = read.csv("./Tables/FAO_Country_Region.csv")
   
+  ESB_2026 = read.csv(gzfile("./Output/ESB_2026_All.gz"))
+  # ESB_2026 = dplyr::select(ESB_2026,-Country,-X)
+  ESB_2026 = dplyr::select(ESB_2026,-Country)
+  ESB_2026$d.source = "ESB 2026"
+  ESB_2026 = dplyr::left_join(ESB_2026,dplyr::select(m49,Country.Code,Country),by=c("Area.Code"="Country.Code"))
+  ESB_2026$Item = as.character(ESB_2026$Item)
+  
   ESB_2025 = read.csv(gzfile("./Output/ESB_2025_All_3.gz"))
   ESB_2025 = dplyr::select(ESB_2025,-Country,-X)
-  ESB_2025$d.source = "ESB 2025"
   ESB_2025 = dplyr::left_join(ESB_2025,dplyr::select(m49,Country.Code,Country),by=c("Area.Code"="Country.Code"))
+  ESB_2025$d.source = "ESB 2025"
   ESB_2025$Item = as.character(ESB_2025$Item)
+  # ESB_2025$Item[ESB_2025$Item=="Nutrient Budget (Total)"] = "Nutrient Balance (Total)"
+  # ESB_2025$Item[ESB_2025$Item=="Synthetic fertilizers"] = "Mineral fertilizers"
+  # ESB_2025$Item.Code[ESB_2025$Item.Code==5061] = 5087
   
-  ESB_2024 = read.csv("./Data/ESB_2024_All_Update_6.csv")
-  ESB_2024 = dplyr::select(ESB_2024,-Country)
-  ESB_2024 = dplyr::left_join(ESB_2024,dplyr::select(m49,Country.Code,Country),by=c("Area.Code"="Country.Code"))
-  ESB_2024$d.source = "ESB 2024"
-  ESB_2024$Item = as.character(ESB_2024$Item)
-  ESB_2024$Item[ESB_2024$Item=="Nutrient Budget (Total)"] = "Nutrient Balance (Total)"
-  ESB_2024$Item[ESB_2024$Item=="Synthetic fertilizers"] = "Mineral fertilizers"
-  ESB_2024$Item.Code[ESB_2024$Item.Code==5061] = 5087
-  
-  Data = rbind(ESB_2025,select(ESB_2024,Domain.Code,Domain,Area.Code,M49.Code,Country,Element.Code,Element,Item.Code,Item,Year.Code,Year,Unit,Value,Flag,d.source))
+  Data = rbind(ESB_2026,select(ESB_2025,Domain.Code,Domain,Area.Code,M49.Code,Country,Element.Code,Element,Item.Code,Item,Year.Code,Year,Unit,Value,Flag,d.source))
   # Data = rbind(Data,ESB_2024_Update)
 
   Data$Item = as.factor(as.character(Data$Item))
   Data = dplyr::rename(Data,AreaName=Country)
   Data = dplyr::left_join(Data,select(FAO_Country_Region,M49.Code,Start.Year,End.Year),by=c("M49.Code" = "M49.Code"))
   Data$Start.Year[is.na(Data$Start.Year)] = 1961
-  Data$End.Year[is.na(Data$End.Year)] = 2023
+  Data$End.Year[is.na(Data$End.Year)] = 2024
   Data = filter(Data,Year>=Start.Year)
   Data = filter(Data,Year<=End.Year)
   
@@ -72,7 +73,7 @@ library(dplyr)
   Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
   Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
   multiple_line_charts(data = Data_Chart,
-                       output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2025/QAQC/",
+                       output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
                        series_by = "d.source",
                        x_variable = "Year",
                        y_variable = "Value",
@@ -96,7 +97,7 @@ library(dplyr)
   Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
   Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
   multiple_line_charts(data = Data_Chart,
-                       output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2025/QAQC/",
+                       output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
                        series_by = "d.source",
                        x_variable = "Year",
                        y_variable = "Value",
@@ -120,7 +121,7 @@ library(dplyr)
   Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
   Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
   multiple_line_charts(data = Data_Chart,
-                       output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2025/QAQC/",
+                       output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
                        series_by = "d.source",
                        x_variable = "Year",
                        y_variable = "Value",
@@ -144,7 +145,7 @@ library(dplyr)
   Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
   Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
   multiple_line_charts(data = Data_Chart,
-                       output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2025/QAQC/",
+                       output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
                        series_by = "d.source",
                        x_variable = "Year",
                        y_variable = "Value",
@@ -168,7 +169,7 @@ Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
 multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2025/QAQC/",
+                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
                      series_by = "d.source",
                      x_variable = "Year",
                      y_variable = "Value",
@@ -191,7 +192,7 @@ Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
 multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2025/QAQC/",
+                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
                      series_by = "d.source",
                      x_variable = "Year",
                      y_variable = "Value",
@@ -214,7 +215,7 @@ Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
 multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2025/QAQC/",
+                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
                      series_by = "d.source",
                      x_variable = "Year",
                      y_variable = "Value",
@@ -237,7 +238,7 @@ Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
 multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2025/QAQC/",
+                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
                      series_by = "d.source",
                      x_variable = "Year",
                      y_variable = "Value",
@@ -260,7 +261,7 @@ Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
 
 multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2025/QAQC/",
+                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
                      series_by = "d.source",
                      x_variable = "Year",
                      y_variable = "Value",
@@ -286,7 +287,7 @@ Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
 multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2025/QAQC/",
+                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
                      series_by = "d.source",
                      x_variable = "Year",
                      y_variable = "Value",
@@ -309,7 +310,7 @@ Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
 multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2025/QAQC/",
+                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
                      series_by = "d.source",
                      x_variable = "Year",
                      y_variable = "Value",
@@ -332,7 +333,7 @@ Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
 multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2025/QAQC/",
+                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
                      series_by = "d.source",
                      x_variable = "Year",
                      y_variable = "Value",
@@ -356,7 +357,7 @@ Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
 multiple_line_charts(data = filter(Data,Element=="Agricultural land potassium"),
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2025/QAQC/",
+                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
                      series_by = "d.source",
                      x_variable = "Year",
                      y_variable = "Value",
@@ -378,7 +379,7 @@ Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
 multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2025/QAQC/",
+                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
                      series_by = "d.source",
                      x_variable = "Year",
                      y_variable = "Value",
@@ -400,7 +401,7 @@ Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
 multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2025/QAQC/",
+                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
                      series_by = "d.source",
                      x_variable = "Year",
                      y_variable = "Value",
@@ -423,7 +424,7 @@ Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
 multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2025/QAQC/",
+                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
                      series_by = "d.source",
                      x_variable = "Year",
                      y_variable = "Value",
@@ -449,7 +450,7 @@ Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
 multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2025/QAQC/",
+                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
                      series_by = "d.source",
                      x_variable = "Year",
                      y_variable = "Value",
@@ -477,7 +478,7 @@ Data_Chart = filter(Data,Item.Code==5086,Element%in%c("Cropland nitrogen",
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
 multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2025/QAQC/",
+                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
                      series_by = "d.source",
                      x_variable = "Year",
                      y_variable = "Value",
@@ -502,7 +503,7 @@ Data_Chart = filter(Data,Item.Code==5180,Element%in%c("Cropland nitrogen fertili
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
 multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2025/QAQC/",
+                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
                      series_by = "d.source",
                      x_variable = "Year",
                      y_variable = "Value",
@@ -525,7 +526,7 @@ Data_Chart = filter(Data,Item.Code==5081,Element%in%c("Sustainable Nitrogen Mana
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
 multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2025/QAQC/",
+                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
                      series_by = "d.source",
                      x_variable = "Year",
                      y_variable = "Value",
@@ -550,7 +551,7 @@ Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
 multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2025/QAQC/",
+                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
                      series_by = "d.source",
                      x_variable = "Year",
                      y_variable = "Value",
@@ -575,7 +576,7 @@ Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
 multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2025/QAQC/",
+                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
                      series_by = "d.source",
                      x_variable = "Year",
                      y_variable = "Value",
