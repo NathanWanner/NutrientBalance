@@ -10,7 +10,7 @@ library(dplyr)
   area_regions = read.csv("./Tables/areas_regions_hierarchy_With_China.csv")
   FAO_Country_Region = read.csv("./Tables/FAO_Country_Region.csv")
   
-  ESB_2026 = read.csv(gzfile("./Output/ESB_2026_All.gz"))
+  ESB_2026 = read.csv(gzfile("./Output/ESB_2026_All_1.gz"))
   # ESB_2026 = dplyr::select(ESB_2026,-Country,-X)
   ESB_2026 = dplyr::select(ESB_2026,-Country)
   ESB_2026$d.source = "ESB 2026"
@@ -546,7 +546,7 @@ multiple_line_charts(data = Data_Chart,
 
 Data_Chart = dplyr::filter(Data,Element%in%c("Cropland nitrogen",
                                              "Cropland phosphorus",
-                                             "Cropland potassium"),Item.Code==5999)
+                                             "Cropland potassium"),Item.Code==5088)
 Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
@@ -571,7 +571,7 @@ multiple_line_charts(data = Data_Chart,
 
 Data_Chart = dplyr::filter(Data,Element%in%c("Cropland nitrogen per unit area",
                                              "Cropland phosphorus per unit area",
-                                             "Cropland potassium per unit area"),Item.Code==5999)
+                                             "Cropland potassium per unit area"),Item.Code==5088)
 Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))

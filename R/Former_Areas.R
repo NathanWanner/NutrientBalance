@@ -23,7 +23,7 @@ Land_Use = Data_Update(StartYear,EndYear,Land_Use)
 Land_Use = dplyr::select(Land_Use,-Item.Code)
 Land_Use = dplyr::rename(Land_Use,Area=Item,CropLand=Value)
 
-ESB_2026 = read.csv(gzfile("./Output/ESB_Data_2026.gz"))
+ESB_2026 = read.csv(gzfile("./Output/ESB_Data_2026_1.gz"))
 # ESB_2026 = select(ESB_2026,-X)
 ESB_2026 = filter(ESB_2026,Element%in%c("Cropland nitrogen","Cropland phosphorus","Cropland potassium"))
 Land_Use = select(Land_Use,-Area)
@@ -319,7 +319,7 @@ ESB_2026_Former_Areas$Unit[ESB_2026_Former_Areas$`Element.Code`%in%c(7276,7281,7
 ESB_2026_Former_Areas$Unit[ESB_2026_Former_Areas$`Element.Code`%in%c(7290,7291,7292)] = "%"
 ESB_2026_Former_Areas = left_join(ESB_2026_Former_Areas,select(m49,Country.Code,M49.Code,Country),by=c("Area.Code"="Country.Code"))
 
-ESB_2026 = read.csv(gzfile("./Output/ESB_Data_2026.gz"))
+ESB_2026 = read.csv(gzfile("./Output/ESB_Data_2026_1.gz"))
 # ESB_2026 = select(ESB_2026,-X)
 ESB_2026 = rbind(ESB_2026,select(ESB_2026_Former_Areas,colnames(ESB_2026)))
-write.csv(ESB_2026,gzfile("./Output/ESB_Data_2026_With_Former_Areas.gz"),row.names=FALSE)
+write.csv(ESB_2026,gzfile("./Output/ESB_Data_2026_With_Former_Areas_1.gz"),row.names=FALSE)

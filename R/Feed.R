@@ -16,13 +16,13 @@ Feed_Old_Methodology = select(Feed_Old_Methodology,Area.Code,Item.Code,Year,Valu
 
 # Updated feed data not available yet, and could not find element code 5521 in the dataset fbs_balanced
 
-Feed_key <- DatasetKey(domain = "suafbs", 
-                       dataset = "sua_balanced", 
+Feed_key <- DatasetKey(domain = "disseminated", 
+                       dataset = "fbs_consolidated", 
                        dimensions = list(
                          geographicAreaM49 = Dimension(name = "geographicAreaM49", 
                                                        keys = GetCodeList("suafbs", "sua_balanced", "geographicAreaM49")[type == "country", code]), 
                          Element = Dimension(name = "measuredElementSuaFbs", 
-                                             keys = c("5520")),
+                                             keys = c("5521")),
                          Item = Dimension(name = "measuredItemFbsSua", 
                                           keys = GetCodeList("suafbs", "sua_balanced", "measuredItemFbsSua")$code),
                          timePointYears = Dimension(name = "timePointYears", 
@@ -31,16 +31,16 @@ Feed_key <- DatasetKey(domain = "suafbs",
 
 
 Feed_New_Methodology <- GetData(key = Feed_key)
-Feed_New_Methodology$Value = Feed_New_Methodology$Value/1000
-Feed_New_Methodology_China = Feed_New_Methodology %>%
-  filter(geographicAreaM49%in%c("156"," 158","446","344")) %>%
-  group_by(measuredElementSuaFbs,measuredItemFbsSua,timePointYears) %>%
-  summarise(Value=sum(Value,na.rm=TRUE)) %>%
-  mutate(geographicAreaM49 ="159",
-         flagObservationStatus ="",
-         flagMethod="") %>%
-  ungroup()
-Feed_New_Methodology = rbind(Feed_New_Methodology,Feed_New_Methodology_China)
+# Feed_New_Methodology$Value = Feed_New_Methodology$Value/1000
+# Feed_New_Methodology_China = Feed_New_Methodology %>%
+#   filter(geographicAreaM49%in%c("156"," 158","446","344")) %>%
+#   group_by(measuredElementSuaFbs,measuredItemFbsSua,timePointYears) %>%
+#   summarise(Value=sum(Value,na.rm=TRUE)) %>%
+#   mutate(geographicAreaM49 ="159",
+#          flagObservationStatus ="",
+#          flagMethod="") %>%
+#   ungroup()
+# Feed_New_Methodology = rbind(Feed_New_Methodology,Feed_New_Methodology_China)
 # Feed_New_Methodology = read.csv("./Data/Feed_New_Methodology.csv")
 Feed_New_Methodology = rename(Feed_New_Methodology,
                         Element.Code=measuredElementSuaFbs ,

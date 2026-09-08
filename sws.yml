@@ -3,6 +3,6 @@ current: production
 
 production:
   server: https://sws.aws.fao.org:8181
-  token: 6e5e5b9f-aedd-49a0-ad42-67b9596c0a01 # generic prod token
+  token: 6a2af494-6489-41ff-bab8-93f52164c5cd # generic prod token
 
   
