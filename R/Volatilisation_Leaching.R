@@ -7,7 +7,7 @@ Manure_key <- DatasetKey(domain = "ghg_emissions_at_farm_gate",
                          dataset = "ghg_emissions_from_livestock_2026_silent_update", 
                          dimensions = list(
                            geographicAreaM49 = Dimension(name = "geographicAreaM49", 
-                                                         keys = c(GetCodeList("ghg_emissions_at_farm_gate", "ghg_emissions_from_livestock_2026_silent_update", "geographicAreaM49")[type == "country", code])), 
+                                                         keys = c(GetCodeList("ghg_emissions_at_farm_gate", "ghg_emissions_from_livestock_2026_silent_update", "geographicAreaM49")[type == "country", code],"159")), 
                            Element = Dimension(name = "ghg_measuredElement_disseminated", 
                                                keys = c("723811","723812")),
                            Source = Dimension(name = "ghg_source", 
@@ -206,22 +206,22 @@ Volatilisation_Leaching = Volatilisation_Leaching %>%
 # min(filter(Volatilisation_Leaching,Area.Code==228)$Year)
 
 # Create China Aggregates
-Volatilisation_Leaching_China = Volatilisation_Leaching %>%
-  dplyr::filter(Area.Code%in%c(41,
-                               96,
-                               128,
-                               214)) %>%
-  dplyr::group_by(Item,Item.Code,Year) %>%
-  dplyr::summarize(Value_Volatilisation_Cropland = sum(Value_Volatilisation_Cropland,na.rm=TRUE),
-                   Value_Volatilisation_Pasture = sum(Value_Volatilisation_Pasture,na.rm=TRUE),
-                   Value_Leaching_Cropland = sum(Value_Leaching_Cropland,na.rm=TRUE),
-                   Value_Leaching_Pasture = sum(Value_Leaching_Pasture,na.rm=TRUE),
-                   Value_Volatilisation_Agr_Area = sum(Value_Volatilisation_Agr_Area,na.rm=TRUE),
-                   Value_Leaching_Agr_Area = sum(Value_Leaching_Agr_Area,na.rm=TRUE)) %>%
-  dplyr::ungroup() %>%
-  mutate(Area.Code=351)
+# Volatilisation_Leaching_China = Volatilisation_Leaching %>%
+#   dplyr::filter(Area.Code%in%c(41,
+#                                96,
+#                                128,
+#                                214)) %>%
+#   dplyr::group_by(Item,Item.Code,Year) %>%
+#   dplyr::summarize(Value_Volatilisation_Cropland = sum(Value_Volatilisation_Cropland,na.rm=TRUE),
+#                    Value_Volatilisation_Pasture = sum(Value_Volatilisation_Pasture,na.rm=TRUE),
+#                    Value_Leaching_Cropland = sum(Value_Leaching_Cropland,na.rm=TRUE),
+#                    Value_Leaching_Pasture = sum(Value_Leaching_Pasture,na.rm=TRUE),
+#                    Value_Volatilisation_Agr_Area = sum(Value_Volatilisation_Agr_Area,na.rm=TRUE),
+#                    Value_Leaching_Agr_Area = sum(Value_Leaching_Agr_Area,na.rm=TRUE)) %>%
+#   dplyr::ungroup() %>%
+#   mutate(Area.Code=351)
 
-Volatilisation_Leaching = rbind(Volatilisation_Leaching,Volatilisation_Leaching_China)
+# Volatilisation_Leaching = rbind(Volatilisation_Leaching,Volatilisation_Leaching_China)
 
 
 

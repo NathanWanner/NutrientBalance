@@ -105,22 +105,22 @@ Item_Group = read.csv("./Tables/Item_Group_Updated.csv")
 # Data for crops
 # Crops = read.csv("../Data/Production_Crops_Livestock_E_All_Data_(Normalized).csv")
 Item_Group_Crops = read.csv("./Data/Item_Group_Updated.csv",colClasses = c("CPCCode" = "character"))
-Crops_key <- DatasetKey(domain = "aproduction", 
-                                     dataset = "aproduction", 
-                                     dimensions = list(
-                                       geographicAreaM49 = Dimension(name = "geographicAreaM49", 
-                                                                     keys = GetCodeList("aproduction", "aproduction", "geographicAreaM49")[,code]), 
-                                       geaElement = Dimension(name = "measuredElement", 
-                                                              keys = "5510"),
-                                       geaItem = Dimension(name = "measuredItemCPC", 
-                                                           keys = as.character(unique(Item_Group_Crops$CPCCode))), 
-                                       timePointYears = Dimension(name = "timePointYears", 
-                                                                  keys = as.character(1961:2024)))
+Crops_key <- DatasetKey(domain = "disseminated", 
+                        dataset = "aproduction_validated", 
+                        dimensions = list(
+                          geographicAreaM49 = Dimension(name = "geographicAreaM49", 
+                                                        keys = GetCodeList("disseminated", "aproduction_validated", "geographicAreaM49")[,code]), 
+                          geaElement = Dimension(name = "measuredElement", 
+                                                 keys = "5510"),
+                          geaItem = Dimension(name = "measuredItemCPC", 
+                                              keys = as.character(unique(Item_Group_Crops$CPCCode))), 
+                          timePointYears = Dimension(name = "timePointYears", 
+                                                     keys = as.character(1961:2024)))
 )
 
 
 Crops <- GetData(key = Crops_key)
-# Calculate China
+# Calculate China - only available from 1991 in SWS
 Crops_China = Crops %>%
   filter(geographicAreaM49%in%c("156"," 158","446","344")) %>%
   group_by(measuredElement,measuredItemCPC,timePointYears) %>%
@@ -129,7 +129,7 @@ Crops_China = Crops %>%
          flagObservationStatus ="",
          flagMethod="") %>%
   ungroup()
-Crops = rbind(Crops,Crops_China)
+Crops = rbind(filter(Crops,!(geographicAreaM49=="159")),Crops_China)
 Crops=left_join(Crops,select(Item_Group_Crops,Item.Code,CPCCode,Item),by=c("measuredItemCPC" = "CPCCode"))
 Crops = rename(Crops,Flag=flagObservationStatus)
 m49$M49.Code = as.character(m49$M49.Code)
@@ -220,6 +220,8 @@ N_Seed_Input = N_Seed_Input %>%
 N_Seed_Input$Nutrient=as.integer(N_Seed_Input$Nutrient)
 N_Seed_Input$Year = as.integer(N_Seed_Input$Year)
 
+write.csv(filter(Crops,N_Removal_Prod>0),"C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/Removal_By_Country_Crop.csv")
+
 Crops = Crops %>%
   group_by(Area.Code,Nutrient.Code,Year) %>%
   summarise(Value_Crops = sum(N_Removal_Prod,na.rm=TRUE)) %>%
@@ -300,4 +302,4 @@ Data = Data %>%
                            Value_Deposition*(Agr_Land/CropLand),
                            na.rm=TRUE)/Agr_Land))
 
-write.csv(Data,"./Output/Data_Output_09Sep2026.csv")
+write.csv(Data,"./Output/Data_Output_16Oct2026.csv")

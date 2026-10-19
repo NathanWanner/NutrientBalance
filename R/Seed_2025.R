@@ -12,22 +12,22 @@ Seed_Old_Methodology = dplyr::select(Seed_Old_Methodology,Area.Code,Item.Code,Ye
 
 # Updated seed data not available yet, and could not find element code 5527 in the dataset fbs_balanced
 Seed_New_Methodology = read.csv("./Data/Seed_New_Methodology.csv")
-
-Seed_key <- DatasetKey(domain = "disseminated", 
-                         dataset = "fbs_consolidated", 
-                         dimensions = list(
-                           geographicAreaM49 = Dimension(name = "geographicAreaM49", 
-                                                         keys = c(GetCodeList("suafbs", "fbs_balanced_", "geographicAreaM49")[type == "country", code],"159")), 
-                           Element = Dimension(name = "measuredElementSuaFbs", 
-                                               keys = c("5527")),
-                           Item = Dimension(name = "measuredItemFbsSua", 
-                                            keys = GetCodeList("suafbs", "fbs_balanced_", "measuredItemFbsSua")$code),
-                           timePointYears = Dimension(name = "timePointYears", 
-                                                      keys = as.character(2010:2024)))
-)
-
-
-Seed_New_Methodology <- GetData(key = Seed_key)
+# 
+# Seed_key <- DatasetKey(domain = "disseminated", 
+#                          dataset = "fbs_consolidated", 
+#                          dimensions = list(
+#                            geographicAreaM49 = Dimension(name = "geographicAreaM49", 
+#                                                          keys = c(GetCodeList("suafbs", "fbs_balanced_", "geographicAreaM49")[type == "country", code],"159")), 
+#                            Element = Dimension(name = "measuredElementSuaFbs", 
+#                                                keys = c("5527")),
+#                            Item = Dimension(name = "measuredItemFbsSua", 
+#                                             keys = GetCodeList("suafbs", "fbs_balanced_", "measuredItemFbsSua")$code),
+#                            timePointYears = Dimension(name = "timePointYears", 
+#                                                       keys = as.character(2010:2024)))
+# )
+# 
+# 
+# Seed_New_Methodology <- GetData(key = Seed_key)
 # Seed_New_Methodology_China = Seed_New_Methodology %>%
 #   filter(geographicAreaM49%in%c("156"," 158","446","344")) %>%
 #   group_by(measuredElementSuaFbs,measuredItemFbsSua,timePointYears) %>%
@@ -37,25 +37,27 @@ Seed_New_Methodology <- GetData(key = Seed_key)
 #          flagMethod="") %>%
 #   ungroup()
 # Seed_New_Methodology = rbind(Seed_New_Methodology,Seed_New_Methodology_China)
+# Seed_New_Methodology = Seed_New_Methodology %>%
+#   mutate(measuredItemFbsSua = gsub("S", "", measuredItemFbsSua))
 Seed_New_Methodology = Seed_New_Methodology %>%
-  mutate(measuredItemFbsSua = gsub("S", "", measuredItemFbsSua))
+  mutate(Item.Code..FBS. = gsub("S", "", Item.Code..FBS.))
 # Seed_New_Methodology$measuredItemFbsSua[Seed_New_Methodology$measuredItemFbsSua=="21910.03"] = "2555"
-Seed_New_Methodology = filter(Seed_New_Methodology,!measuredItemFbsSua=="21910.03")
-Seed_New_Methodology = Seed_New_Methodology %>%
-  group_by(geographicAreaM49,measuredElementSuaFbs,measuredItemFbsSua,timePointYears) %>%
-  # summarise(Value=sum(Value,na.rm=TRUE)/1000) %>%
-  summarise(Value=sum(Value,na.rm=TRUE)) %>%
-  mutate(flagObservationStatus="",flagMethod="") %>%
-  ungroup() 
-Seed_New_Methodology$measuredItemFbsSua = as.integer(Seed_New_Methodology$measuredItemFbsSua)
-Seed_New_Methodology = rename(Seed_New_Methodology,
-                              Element.Code=measuredElementSuaFbs ,
-                              Item.Code=measuredItemFbsSua)
-Seed_New_Methodology$geographicAreaM49 = as.integer(Seed_New_Methodology$geographicAreaM49)
-Seed_New_Methodology = left_join(Seed_New_Methodology,select(m49,M49.Code,Country.Code),by=c("geographicAreaM49" = "M49.Code"))
-Seed_New_Methodology = rename(Seed_New_Methodology,
-                              Area.Code=Country.Code,
-                              Year=timePointYears)
+# Seed_New_Methodology = filter(Seed_New_Methodology,!measuredItemFbsSua=="21910.03")
+# Seed_New_Methodology = Seed_New_Methodology %>%
+#   group_by(geographicAreaM49,measuredElementSuaFbs,measuredItemFbsSua,timePointYears) %>%
+#   # summarise(Value=sum(Value,na.rm=TRUE)/1000) %>%
+#   summarise(Value=sum(Value,na.rm=TRUE)) %>%
+#   mutate(flagObservationStatus="",flagMethod="") %>%
+#   ungroup() 
+# Seed_New_Methodology$measuredItemFbsSua = as.integer(Seed_New_Methodology$measuredItemFbsSua)
+# Seed_New_Methodology = rename(Seed_New_Methodology,
+#                               Element.Code=measuredElementSuaFbs ,
+#                               Item.Code=measuredItemFbsSua)
+# Seed_New_Methodology$geographicAreaM49 = as.integer(Seed_New_Methodology$geographicAreaM49)
+# Seed_New_Methodology = left_join(Seed_New_Methodology,select(m49,M49.Code,Country.Code),by=c("geographicAreaM49" = "M49.Code"))
+# Seed_New_Methodology = rename(Seed_New_Methodology,
+#                               Area.Code=Country.Code,
+#                               Year=timePointYears)
 Seed_New_Methodology = dplyr::select(Seed_New_Methodology,Area.Code,Item.Code,Year,Value)
 Seed = rbind(Seed_Old_Methodology,Seed_New_Methodology)
 

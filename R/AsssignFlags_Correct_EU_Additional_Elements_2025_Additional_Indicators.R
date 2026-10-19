@@ -2,8 +2,8 @@
 library(dplyr)
 library(tidyr)
 
-Data = read.csv("./Output/Data_Output_09sep2026.csv")
-load(file="./Output/Crop_Residues_Removal_Disseminate_China_3_Update.RData")
+Data = read.csv("./Output/Data_Output_16Oct2026.csv")
+load(file="./Output/Crop_Residues_Removal_Disseminate_China_3_Update_2.RData")
 Data = select(Data,-X)
 Crop_Residues_Removal = dplyr::rename(Crop_Residues_Removal,Value_Crop_Residues_Removal = Value)
 Data = left_join(Data,Crop_Residues_Removal)
@@ -468,11 +468,11 @@ List_Mask_Countries  = unique(c(unique(rbind(List_No_Fert_Yes_Production_1,List_
 Data_FAOSTAT = filter(Data,!`Area Code`%in%List_Mask_Countries)
 Data_FAOSTAT = select(Data_FAOSTAT,`Domain Code`,`Domain`,M49.Code,`Area Code`,Country,`Element Code`,`Element`,`Item Code`,`Item`,`Year Code`,`Year`,`Unit`,`Value`,`Flag`)
 Data_FAOSTAT = filter(Data_FAOSTAT,!is.na(Value))
-write.csv(Data_FAOSTAT, file=gzfile("./Output/ESB_2026_All_1.gz"),row.names=FALSE)
+write.csv(Data_FAOSTAT, file=gzfile("./Output/ESB_2026_All_3.gz"),row.names=FALSE)
 Data_FAOSTAT = filter(Data_FAOSTAT,`Element Code`%in%c(7275,7276,7280,7281,7282,7283,7290,7291,7292),`Item Code`%in%c(5078,5077,5076,5087,5062,5079,5080,5081,5082,5083,5086,5180,5088))
 
 # Take out the countries for which we have crop removal but no fertilizer data or fertilizer data is 0 (43 countries)
 # Also take out countries for which we have fertlizer data but no crop removal (1 country) 
 # List_Mask_Countries  = unique(c(unique(rbind(List_No_Fert_Yes_Production_1,List_Yes_Fert_No_Production_2)$Area.Code),c(List_Masked_Countries_Fert)))
-write.csv(Data_FAOSTAT,file=gzfile("./Output/ESB_Data_2026_1.gz"),row.names=FALSE)
+write.csv(Data_FAOSTAT,file=gzfile("./Output/ESB_Data_2026_3.gz"),row.names=FALSE)
 

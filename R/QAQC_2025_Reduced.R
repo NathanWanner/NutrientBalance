@@ -10,7 +10,7 @@ library(dplyr)
   area_regions = read.csv("./Tables/areas_regions_hierarchy_With_China.csv")
   FAO_Country_Region = read.csv("./Tables/FAO_Country_Region.csv")
   
-  ESB_2026 = read.csv(gzfile("./Output/ESB_Data_2026_With_Former_Areas_1.gz"))
+  ESB_2026 = read.csv(gzfile("./Output/ESB_Data_2026_With_Former_Areas_3.gz"))
   # ESB_2026 = dplyr::select(ESB_2026,-Country,-X)
   ESB_2026 = dplyr::select(ESB_2026,-Country)
   ESB_2026$d.source = "ESB 2026"
@@ -18,6 +18,7 @@ library(dplyr)
   ESB_2026$Item = as.character(ESB_2026$Item)
   
   ESB_2025 = read.csv(gzfile("./Output/ESB_Data_2025_With_Former_Areas_4.gz"))
+  # ESB_2025$Item.Code[ESB_2025$Item.Code==5999] = 5088
   ESB_2025 = dplyr::select(ESB_2025,-Country)
   ESB_2025 = dplyr::left_join(ESB_2025,dplyr::select(m49,Country.Code,Country),by=c("Area.Code"="Country.Code"))
   ESB_2025$d.source = "ESB 2025"
@@ -210,7 +211,7 @@ multiple_line_charts(data = Data_Chart,
                      legend=TRUE
 )
 
-Data_Chart = dplyr::filter(Data,Element=="Cropland nitrogen per unit area",!Item.Code==5086)
+Data_Chart = dplyr::filter(Data,Element=="Cropland nitrogen per unit area",!(Item.Code%in%c(5086,5088)))
 Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
@@ -305,169 +306,6 @@ multiple_line_charts(data = Data_Chart,
                      legend=TRUE
 )
 
-Data_Chart = dplyr::filter(Data,Element=="Agricultural land nitrogen",!Item.Code==5086)
-Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
-Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
-Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
-multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
-                     series_by = "d.source",
-                     x_variable = "Year",
-                     y_variable = "Value",
-                     plots_by = "Item",
-                     pages_by = "AreaName",
-                     files_by = NULL,
-                     symbol_by = "Flag",
-                     units = "Unit",
-                     plots_per_row = 2,
-                     plots_per_column = 5,
-                     colour_assignment = colour_assignment,
-                     line_assignment = line_assignment,
-                     symbol_assignment = symbol_assignment,
-                     file_name = "Agricultural land nitrogen",
-                     legend=TRUE
-)
-Data_Chart = filter(Data,Element=="Agricultural land phosphorus",Item.Code%in%c(5077,5087,5062,5079,5080,5081))
-# Data_Chart = dplyr::filter(Data,Element=="Agricultural land nitrogen")
-Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
-Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
-Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
-multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
-                     series_by = "d.source",
-                     x_variable = "Year",
-                     y_variable = "Value",
-                     plots_by = "Item",
-                     pages_by = "AreaName",
-                     files_by = NULL,
-                     symbol_by = "Flag",
-                     units = "Unit",
-                     plots_per_row = 2,
-                     plots_per_column = 3,
-                     colour_assignment = colour_assignment,
-                     line_assignment = line_assignment,
-                     symbol_assignment = symbol_assignment,
-                     file_name = "Agricultural land phosphorus",
-                     legend=TRUE
-)
-
-Data_Chart = filter(Data,Element=="Agricultural land potassium",Item.Code%in%c(5077,5087,5062,5079,5080,5081))
-# Data_Chart = dplyr::filter(Data,Element=="Agricultural land nitrogen")
-Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
-Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
-Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
-multiple_line_charts(data = filter(Data,Element=="Agricultural land potassium"),
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
-                     series_by = "d.source",
-                     x_variable = "Year",
-                     y_variable = "Value",
-                     plots_by = "Item",
-                     pages_by = "AreaName",
-                     files_by = NULL,
-                     symbol_by = "Flag",
-                     units = "Unit",
-                     plots_per_row = 2,
-                     plots_per_column = 3,
-                     colour_assignment = colour_assignment,
-                     line_assignment = line_assignment,
-                     symbol_assignment = symbol_assignment,
-                     file_name = "Agricultural land potassium",
-                     legend=TRUE
-)
-Data_Chart = dplyr::filter(Data,Element=="Agricultural land nitrogen per unit area",!Item.Code==5086)
-Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
-Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
-Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
-multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
-                     series_by = "d.source",
-                     x_variable = "Year",
-                     y_variable = "Value",
-                     plots_by = "Item",
-                     pages_by = "AreaName",
-                     files_by = NULL,
-                     symbol_by = "Flag",
-                     units = "Unit",
-                     plots_per_row = 2,
-                     plots_per_column = 5,
-                     colour_assignment = colour_assignment,
-                     line_assignment = line_assignment,
-                     symbol_assignment = symbol_assignment,
-                     file_name = "Agricultural land nitrogen per unit area",
-                     legend=TRUE
-)
-Data_Chart = filter(Data,Element=="Agricultural land phosphorus per unit area",Item.Code%in%c(5077,5087,5062,5079,5080,5081))
-Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
-Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
-Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
-multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
-                     series_by = "d.source",
-                     x_variable = "Year",
-                     y_variable = "Value",
-                     plots_by = "Item",
-                     pages_by = "AreaName",
-                     files_by = NULL,
-                     symbol_by = "Flag",
-                     units = "Unit",
-                     plots_per_row = 2,
-                     plots_per_column = 3,
-                     colour_assignment = colour_assignment,
-                     line_assignment = line_assignment,
-                     symbol_assignment = symbol_assignment,
-                     file_name = "Agricultural land phosphorus per unit area",
-                     legend=TRUE
-)
-
-Data_Chart = filter(Data,Element=="Agricultural land potassium per unit area",Item.Code%in%c(5077,5087,5062,5079,5080,5081))
-Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
-Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
-Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
-multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
-                     series_by = "d.source",
-                     x_variable = "Year",
-                     y_variable = "Value",
-                     plots_by = "Item",
-                     pages_by = "AreaName",
-                     files_by = NULL,
-                     symbol_by = "Flag",
-                     units = "Unit",
-                     plots_per_row = 2,
-                     plots_per_column = 3,
-                     colour_assignment = colour_assignment,
-                     line_assignment = line_assignment,
-                     symbol_assignment = symbol_assignment,
-                     file_name = "Agricultural land potassium per unit area",
-                     legend=TRUE
-)
-
-Data_Chart = filter(Data,Element%in%c("Agricultural land nitrogen use efficiency",
-                                      "Agricultural land phosphorus use efficiency",
-                                      "Agricultural land potassium use efficiency"),
-                    Item.Code%in%c(5081))
-Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
-Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
-Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
-multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
-                     series_by = "d.source",
-                     x_variable = "Year",
-                     y_variable = "Value",
-                     plots_by = "Element",
-                     pages_by = "AreaName",
-                     files_by = NULL,
-                     symbol_by = "Flag",
-                     units = "Unit",
-                     plots_per_row = 1,
-                     plots_per_column = 3,
-                     colour_assignment = colour_assignment,
-                     line_assignment = line_assignment,
-                     symbol_assignment = symbol_assignment,
-                     file_name = "Agricultural land nutrient use efficiency",
-                     legend=TRUE
-)
-
 Data_Chart = filter(Data,Item.Code==5086,Element%in%c("Cropland nitrogen",
                                          "Cropland phosphorus",
                                          "Cropland potassium",
@@ -493,54 +331,6 @@ multiple_line_charts(data = Data_Chart,
                      line_assignment = line_assignment,
                      symbol_assignment = symbol_assignment,
                      file_name = "Seeds",
-                     legend=TRUE
-)
-
-Data_Chart = filter(Data,Item.Code==5180,Element%in%c("Cropland nitrogen fertilizer dependency",
-                                                      "Cropland phosphorus fertilizer dependency",
-                                                      "Cropland potassium fertilizer dependency"))
-
-Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
-Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
-multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
-                     series_by = "d.source",
-                     x_variable = "Year",
-                     y_variable = "Value",
-                     plots_by = "Element",
-                     pages_by = "AreaName",
-                     files_by = NULL,
-                     symbol_by = "Flag",
-                     units = "Unit",
-                     plots_per_row = 1,
-                     plots_per_column = 3,
-                     colour_assignment = colour_assignment,
-                     line_assignment = line_assignment,
-                     symbol_assignment = symbol_assignment,
-                     file_name = "FDI",
-                     legend=TRUE
-)
-
-Data_Chart = filter(Data,Item.Code==5081,Element%in%c("Sustainable Nitrogen Management Index"))
-
-Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
-Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
-multiple_line_charts(data = Data_Chart,
-                     output_folder = "C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/",
-                     series_by = "d.source",
-                     x_variable = "Year",
-                     y_variable = "Value",
-                     plots_by = "Element",
-                     pages_by = "AreaName",
-                     files_by = NULL,
-                     symbol_by = "Flag",
-                     units = "Unit",
-                     plots_per_row = 1,
-                     plots_per_column = 1,
-                     colour_assignment = colour_assignment,
-                     line_assignment = line_assignment,
-                     symbol_assignment = symbol_assignment,
-                     file_name = "SNMI",
                      legend=TRUE
 )
 

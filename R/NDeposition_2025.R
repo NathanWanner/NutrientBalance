@@ -23,19 +23,19 @@ Land_Area = Land_Area %>%
   ungroup()
 Land_Area = filter(Land_Area,!is.na(Agr_Share))
 
-N_Deposition = read.csv("./Data/N_Deposition_2024.csv")
-N_Deposition = select(N_Deposition,-Country)
+N_Deposition = read.csv("./Data/3_WH_update2026.csv")
+N_Deposition = select(N_Deposition,-Country,-Rgn)
 N_Deposition = gather(N_Deposition,Year,Value,-m49)
 N_Deposition$Year = as.numeric(substr(N_Deposition$Year,2,5))
 N_Deposition = left_join(N_Deposition,select(m49,Country.Code,M49.Code),by=c("m49"="M49.Code"))
 N_Deposition = select(rename(N_Deposition,Area.Code=Country.Code),-m49)
 
-# Update 2026 - no new data for deposition - update rates through 2024
-N_Deposition = N_Deposition %>%
-  group_by(Area.Code) %>% 
-  complete(Year = min(Year):2024) %>%
-  tidyr::fill(Value,.direction=c("down")) %>%
-  ungroup()
+# Update 2026 - we now have data through 2025
+# N_Deposition = N_Deposition %>%
+#   group_by(Area.Code) %>% 
+#   complete(Year = min(Year):2024) %>%
+#   tidyr::fill(Value,.direction=c("down")) %>%
+#   ungroup()
 
 N_Deposition = left_join(N_Deposition,Land_Area)
 # N Deposition was in kg/ha
@@ -59,5 +59,6 @@ N_Deposition_China = N_Deposition %>%
 
 N_Deposition = rbind(N_Deposition,N_Deposition_China)
 N_Deposition = as.data.frame(N_Deposition)
+N_Deposition = filter(N_Deposition,Year<=2024)
 # Temporary until updated manure data is received
 
