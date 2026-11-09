@@ -10,7 +10,7 @@ library(dplyr)
   area_regions = read.csv("./Tables/areas_regions_hierarchy_With_China.csv")
   FAO_Country_Region = read.csv("./Tables/FAO_Country_Region.csv")
   
-  ESB_2026 = read.csv(gzfile("./Output/ESB_Data_2026_With_Former_Areas_3.gz"))
+  ESB_2026 = read.csv(gzfile("./Output/ESB_Data_2026_With_Former_Areas_6.gz"))
   # ESB_2026 = dplyr::select(ESB_2026,-Country,-X)
   ESB_2026 = dplyr::select(ESB_2026,-Country)
   ESB_2026$d.source = "ESB 2026"
@@ -26,6 +26,8 @@ library(dplyr)
   ESB_2025$Item[ESB_2025$Item=="Nutrient Budget (Total)"] = "Nutrient Balance (Total)"
   ESB_2025$Item[ESB_2025$Item=="Synthetic fertilizers"] = "Mineral fertilizers"
   ESB_2025$Item.Code[ESB_2025$Item.Code==5061] = 5087
+  ESB_2025$Item.Code[ESB_2025$Item.Code==5062] = 5089
+  
   
   Data = rbind(ESB_2026,select(ESB_2025,Domain.Code,Domain,Area.Code,M49.Code,Country,Element.Code,Element,Item.Code,Item,Year.Code,Year,Unit,Value,Flag,d.source))
   # Data = rbind(Data,ESB_2025_Update)
@@ -165,7 +167,7 @@ library(dplyr)
   )
 
 
-Data_Chart = dplyr::filter(Data,Element=="Cropland phosphorus",Item.Code%in%c(5077,5087,5062,5079,5080,5081))
+Data_Chart = dplyr::filter(Data,Element=="Cropland phosphorus",Item.Code%in%c(5077,5087,5089,5079,5080,5081))
 Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
@@ -188,7 +190,7 @@ multiple_line_charts(data = Data_Chart,
                      legend=TRUE
 )
 
-Data_Chart = dplyr::filter(Data,Element=="Cropland potassium",Item.Code%in%c(5077,5087,5062,5079,5080,5081))
+Data_Chart = dplyr::filter(Data,Element=="Cropland potassium",Item.Code%in%c(5077,5087,5089,5079,5080,5081))
 Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
@@ -234,7 +236,7 @@ multiple_line_charts(data = Data_Chart,
                      legend=TRUE
 )
 
-Data_Chart = filter(Data,Element=="Cropland phosphorus per unit area",Item.Code%in%c(5077,5087,5062,5079,5080,5081))
+Data_Chart = filter(Data,Element=="Cropland phosphorus per unit area",Item.Code%in%c(5077,5087,5089,5079,5080,5081))
 Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
@@ -256,7 +258,7 @@ multiple_line_charts(data = Data_Chart,
                      file_name = "Cropland phosphorus per unit area",
                      legend=TRUE
 )
-Data_Chart = filter(Data,Element=="Cropland potassium per unit area",Item.Code%in%c(5077,5087,5062,5079,5080,5081))
+Data_Chart = filter(Data,Element=="Cropland potassium per unit area",Item.Code%in%c(5077,5087,5089,5079,5080,5081))
 Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))

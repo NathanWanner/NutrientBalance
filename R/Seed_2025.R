@@ -39,8 +39,8 @@ Seed_New_Methodology = read.csv("./Data/Seed_New_Methodology.csv")
 # Seed_New_Methodology = rbind(Seed_New_Methodology,Seed_New_Methodology_China)
 # Seed_New_Methodology = Seed_New_Methodology %>%
 #   mutate(measuredItemFbsSua = gsub("S", "", measuredItemFbsSua))
-Seed_New_Methodology = Seed_New_Methodology %>%
-  mutate(Item.Code..FBS. = gsub("S", "", Item.Code..FBS.))
+# Seed_New_Methodology = Seed_New_Methodology %>%
+#   mutate(Item.Code..FBS. = gsub("S", "", Item.Code..FBS.))
 # Seed_New_Methodology$measuredItemFbsSua[Seed_New_Methodology$measuredItemFbsSua=="21910.03"] = "2555"
 # Seed_New_Methodology = filter(Seed_New_Methodology,!measuredItemFbsSua=="21910.03")
 # Seed_New_Methodology = Seed_New_Methodology %>%
@@ -58,6 +58,10 @@ Seed_New_Methodology = Seed_New_Methodology %>%
 # Seed_New_Methodology = rename(Seed_New_Methodology,
 #                               Area.Code=Country.Code,
 #                               Year=timePointYears)
+
+Seed_New_Methodology = dplyr::rename(Seed_New_Methodology,Area.Code = Area.Code..FAO.)
+Seed_New_Methodology = dplyr::rename(Seed_New_Methodology,Item.Code = Item.Code..FAO.)
+Seed_New_Methodology = dplyr::select(Seed_New_Methodology,Area.Code,Item.Code,Year,Value)
 Seed_New_Methodology = dplyr::select(Seed_New_Methodology,Area.Code,Item.Code,Year,Value)
 Seed = rbind(Seed_Old_Methodology,Seed_New_Methodology)
 
@@ -65,9 +69,30 @@ StartYear=1961
 EndYear=2024
 Seed$Item = Seed$Item.Code
 Seed$Year = as.integer(Seed$Year)
-Seed = Data_Update(StartYear,EndYear,Seed)
+Seed$Flag = NA
+
+Seed = left_join(Seed,select(FAO_Country_Region,Country.Code,Start.Year,End.Year),by=c("Area.Code"="Country.Code"))
+Seed$Start.Year[is.na(Seed$Start.Year)]  = StartYear
+Seed$End.Year[is.na(Seed$End.Year)]  = EndYear
+
+Seed = Seed %>%
+  dplyr::group_by(Area.Code,Item.Code,Item) %>%
+  tidyr::complete(Year = min(c(Year,Start.Year)):max(c(Year,End.Year))) %>%
+  dplyr::mutate(Value = na.approx(Value, na.rm = FALSE)) %>%
+  dplyr::arrange(Area.Code,Year) %>%
+  tidyr::fill(everything(),.direction="down") %>%
+  tidyr::fill(everything(),.direction="up") %>%
+  dplyr::ungroup() %>%
+  dplyr::select(-Start.Year,-End.Year)
+
+Seed = Data_Update_Biodiversity(StartYear,EndYear,Seed)
 Seed = dplyr::select(Seed,-Item)
 Item_Group = read.csv("./Tables/Item_Group_Updated.csv")
+
+Seed = left_join(Seed,FAO_Country_Region,by=c("Area.Code"="Country.Code"))
+Seed$Start.Year[is.na(Seed$Start.Year)]  = StartYear
+Seed$End.Year[is.na(Seed$End.Year)]  = EndYear
+
 
 N_Removal_Seed$Item_Code_Removal = as.integer(N_Removal_Seed$Item_Code_Removal)
 N_Removal_Seed = left_join(N_Removal_Seed,select(Item_Group,Item.Code,Item.Group.Code),by=c("Item_Code_Removal" = "Item.Code"))
@@ -86,10 +111,10 @@ N_Removal_Seed$Nutrient.Code[N_Removal_Seed$Nutrient.Code=="K_kg_per_t_fresh_wt"
 Seed$Item.Code = as.integer(Seed$Item.Code)
 Seed = left_join(Seed,N_Removal_Seed,by=c("Item.Code"="Item.Code..FAO..Seed"))
 Seed = Seed %>%
-  rowwise() %>%
-  mutate(Value_Seed_2 = Value*N_Removal*1000) %>%
-  ungroup() %>%
-  group_by(Area.Code,Year,Nutrient.Code) %>%
-  summarise(Value_Seed_2 = sum(Value_Seed_2,na.rm=TRUE)) %>%
-  ungroup()
+  dplyr::rowwise() %>%
+  dplyr::mutate(Value_Seed_2 = Value*N_Removal*1000) %>%
+  dplyr::ungroup() %>%
+  dplyr::group_by(Area.Code,Year,Nutrient.Code) %>%
+  dplyr::summarise(Value_Seed_2 = sum(Value_Seed_2,na.rm=TRUE)) %>%
+  dplyr::ungroup()
 Seed$Nutrient.Code = as.double(Seed$Nutrient.Code)

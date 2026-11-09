@@ -122,7 +122,7 @@ Crops_key <- DatasetKey(domain = "disseminated",
 Crops <- GetData(key = Crops_key)
 # Calculate China - only available from 1991 in SWS
 Crops_China = Crops %>%
-  filter(geographicAreaM49%in%c("156"," 158","446","344")) %>%
+  filter(geographicAreaM49%in%c("156","158","446","344")) %>%
   group_by(measuredElement,measuredItemCPC,timePointYears) %>%
   summarise(Value=sum(Value,na.rm=TRUE)) %>%
   mutate(geographicAreaM49 ="159",
@@ -220,12 +220,15 @@ N_Seed_Input = N_Seed_Input %>%
 N_Seed_Input$Nutrient=as.integer(N_Seed_Input$Nutrient)
 N_Seed_Input$Year = as.integer(N_Seed_Input$Year)
 
-write.csv(filter(Crops,N_Removal_Prod>0),"C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/Removal_By_Country_Crop.csv")
+# write.csv(filter(Crops,N_Removal_Prod>0),"C:/Users/WANNER/OneDrive - Food and Agriculture Organization/Telworking_Work/SNB/2026/QAQC/Removal_By_Country_Crop.csv")
 
 Crops = Crops %>%
   group_by(Area.Code,Nutrient.Code,Year) %>%
   summarise(Value_Crops = sum(N_Removal_Prod,na.rm=TRUE)) %>%
   filter(Value_Crops>0)
+
+# write.csv(Crops,"Crops_QA_SWS.csv")
+
 
 # Fodder = read.csv("../Data/CommodityBalances_Crops_E_All_Data_(Normalized).csv")
 # Fodder = filter(Fodder,Element=="Feed") %>%
@@ -302,4 +305,4 @@ Data = Data %>%
                            Value_Deposition*(Agr_Land/CropLand),
                            na.rm=TRUE)/Agr_Land))
 
-write.csv(Data,"./Output/Data_Output_16Oct2026.csv")
+write.csv(Data,"./Output/Data_Output_09Nov2026.csv")

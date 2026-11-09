@@ -4,11 +4,14 @@
 # Updated comments Jan 26, 2026
 library(dplyr)
 area_regions_hieararchy = read.csv("./Tables/areas_regions_hierarchy.csv")
+areas_regions_hierarchy_with_china = read.csv("./Tables/areas_regions_hierarchy_with_china.csv")
+
 FAO_Country_Region = read.csv("./Tables/FAO_Country_Region.csv")
 # N_Fixation_Coefficients = read.csv("../Data/N_Fixation.csv")
 # First gather the inputs: syntehtic fertilizer, Managed_Manure, and seed
 # Data for synthetic fertilizers
 # Unit of measure is tonnes of nutrients
+
 Manure_Item_Codes = read.csv("./Tables/item_names_GHG.csv")
 Manure_Item_Codes = unique(Manure_Item_Codes)
 Item_Group = read.csv("./Data/Item_Group_Updated.csv",colClasses = c("CPCCode" = "character"))
@@ -104,7 +107,7 @@ Fert_IFA = select(Fert_IFA,
 # Fert_IFA = Data_Update(StartYear,EndYear,rename(Fert_IFA,Area.Code=AreaCode,Item.Code=ItemCode))
 # Fert_IFA = rename(Fert_IFA,AreaCode=Area.Code,ItemCode=Item.Code)
 # Fert_IFA = select(Fert_IFA,-Item)
-Fert_IFA = inner_join(Fert_IFA,select(areas_regions_hierarchy,AreaCode),by=c("AreaCode"="AreaCode"))
+Fert_IFA = inner_join(Fert_IFA,select(areas_regions_hierarchy_with_china,AreaCode),by=c("AreaCode"="AreaCode"))
 Fert_IFA = data.frame(Fert_IFA)
 Fert_IFA = Fert_IFA %>%
   mutate(Value_Fert_IFA = Value*1000*1000)
@@ -112,6 +115,7 @@ Fert_IFA = Fert_IFA %>%
 Fert_IFA$Value_Fert_IFA[Fert_IFA$ItemCode==3103] = Fert_IFA$Value_Fert_IFA[Fert_IFA$ItemCode==3103]*.436
 # Convert K2O to K
 Fert_IFA$Value_Fert_IFA[Fert_IFA$ItemCode==3104] = Fert_IFA$Value_Fert_IFA[Fert_IFA$ItemCode==3104]*.830
+
 # Data for Managed_Manure
 # Unit of measure is kg of Nitrogen
 # Here is 2026 version

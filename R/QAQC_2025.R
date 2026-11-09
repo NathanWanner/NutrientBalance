@@ -18,6 +18,7 @@ library(dplyr)
   ESB_2026$Item = as.character(ESB_2026$Item)
   
   ESB_2025 = read.csv(gzfile("./Output/ESB_2025_All_3.gz"))
+  ESB_2025$Item.Code[ESB_2025$Item.Code==5062] = 5089
   ESB_2025$Item.Code[ESB_2025$Item.Code==5999] = 5088
   ESB_2025 = dplyr::select(ESB_2025,-Country,-X)
   ESB_2025 = dplyr::left_join(ESB_2025,dplyr::select(m49,Country.Code,Country),by=c("Area.Code"="Country.Code"))
@@ -91,7 +92,7 @@ multiple_line_charts(data = Data_Chart,
                      file_name = "Agricultural land nitrogen",
                      legend=TRUE
 )
-Data_Chart = filter(Data,Element=="Agricultural land phosphorus",Item.Code%in%c(5077,5087,5062,5079,5080,5081))
+Data_Chart = filter(Data,Element=="Agricultural land phosphorus",Item.Code%in%c(5077,5087,5089,5079,5080,5081))
 # Data_Chart = dplyr::filter(Data,Element=="Agricultural land nitrogen")
 Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
@@ -115,7 +116,7 @@ multiple_line_charts(data = Data_Chart,
                      legend=TRUE
 )
 
-Data_Chart = filter(Data,Element=="Agricultural land potassium",Item.Code%in%c(5077,5087,5062,5079,5080,5081))
+Data_Chart = filter(Data,Element=="Agricultural land potassium",Item.Code%in%c(5077,5087,5089,5079,5080,5081))
 # Data_Chart = dplyr::filter(Data,Element=="Agricultural land nitrogen")
 Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
@@ -160,7 +161,7 @@ multiple_line_charts(data = Data_Chart,
                      file_name = "Agricultural land nitrogen per unit area",
                      legend=TRUE
 )
-Data_Chart = filter(Data,Element=="Agricultural land phosphorus per unit area",Item.Code%in%c(5077,5087,5062,5079,5080,5081))
+Data_Chart = filter(Data,Element=="Agricultural land phosphorus per unit area",Item.Code%in%c(5077,5087,5089,5079,5080,5081))
 Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
@@ -183,7 +184,7 @@ multiple_line_charts(data = Data_Chart,
                      legend=TRUE
 )
 
-Data_Chart = filter(Data,Element=="Agricultural land potassium per unit area",Item.Code%in%c(5077,5087,5062,5079,5080,5081))
+Data_Chart = filter(Data,Element=="Agricultural land potassium per unit area",Item.Code%in%c(5077,5087,5089,5079,5080,5081))
 Data_Chart$Item = as.factor(as.character(Data_Chart$Item))
 Data_Chart$Element = as.factor(as.character(Data_Chart$Element))
 Data_Chart$AreaName = as.factor(as.character(Data_Chart$AreaName))
