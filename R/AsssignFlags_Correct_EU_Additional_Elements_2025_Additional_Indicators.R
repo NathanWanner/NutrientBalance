@@ -2,7 +2,7 @@
 library(dplyr)
 library(tidyr)
 
-Data = read.csv("./Output/Data_Output_09Nov2026.csv")
+Data = read.csv("./Output/Data_Output_10Nov2026.csv")
 load(file="./Output/Crop_Residues_Removal_Disseminate_China_3_Update_2.RData")
 Data = select(Data,-X)
 Crop_Residues_Removal = dplyr::rename(Crop_Residues_Removal,Value_Crop_Residues_Removal = Value)
@@ -24,17 +24,17 @@ Data = Data %>%
 Data$Value_Fert[is.nan(Data$Value_Fert)] = NA
 
 # Recalculate aggregate China, because of IFA data
-Data_China_Fert = Data %>%
-  filter(Area.Code%in%c(41,96,128,214)) %>%
-  group_by(Item.Code,Item,Year) %>%
-  summarise(Value_Fert = sum(Value_Fert,na.r=TRUE)) %>%
-  mutate(Area.Code=351) %>%
-  ungroup() 
-
-Data = left_join(Data,Data_China_Fert,by = c("Area.Code","Item.Code","Item","Year"))
-Data$Value_Fert.x[!is.na(Data$Value_Fert.y)] = Data$Value_Fert.y[!is.na(Data$Value_Fert.y)]
-Data$Value_Fert = Data$Value_Fert.x
-Data = select(Data,-Value_Fert.x,-Value_Fert.y)
+# Data_China_Fert = Data %>%
+#   filter(Area.Code%in%c(41,96,128,214)) %>%
+#   group_by(Item.Code,Item,Year) %>%
+#   summarise(Value_Fert = sum(Value_Fert,na.r=TRUE)) %>%
+#   mutate(Area.Code=351) %>%
+#   ungroup() 
+# 
+# Data = left_join(Data,Data_China_Fert,by = c("Area.Code","Item.Code","Item","Year"))
+# Data$Value_Fert.x[!is.na(Data$Value_Fert.y)] = Data$Value_Fert.y[!is.na(Data$Value_Fert.y)]
+# Data$Value_Fert = Data$Value_Fert.x
+# Data = select(Data,-Value_Fert.x,-Value_Fert.y)
 
 # Recalculate China aggregate
 
@@ -400,9 +400,9 @@ Data$`Item Code`[Data$Item=="Outputs"] = 5080
 Data$Item[Data$Item=="Outputs"] = "Outputs (Total)"
 Data$`Item Code`[Data$Item=="SNB"] = 5081
 Data$Item[Data$Item=="SNB"] = "Nutrient Balance (Total)"
-Data$`Item Code`[Data$Item=="Value_Volatilisation"] = 5082
+Data$`Item Code`[Data$Item=="Value_Volatilisation"] = 5083
 Data$Item[Data$Item=="Value_Volatilisation"] = "Volatilisation"
-Data$`Item Code`[Data$Item=="Value_Leaching"] = 5083
+Data$`Item Code`[Data$Item=="Value_Leaching"] = 5082
 Data$Item[Data$Item=="Value_Leaching"] = "Leaching"
 Data$`Item Code`[Data$Item=="NUE"] = 5081
 Data$Item[Data$Item=="NUE"] = "Nutrient Balance (Total)"
@@ -483,11 +483,11 @@ List_Mask_Countries  = unique(c(unique(rbind(List_No_Fert_Yes_Production_1,List_
 Data_FAOSTAT = filter(Data,!`Area Code`%in%List_Mask_Countries)
 Data_FAOSTAT = select(Data_FAOSTAT,`Domain Code`,`Domain`,M49.Code,`Area Code`,Country,`Element Code`,`Element`,`Item Code`,`Item`,`Year Code`,`Year`,`Unit`,`Value`,`Flag`)
 Data_FAOSTAT = filter(Data_FAOSTAT,!is.na(Value))
-write.csv(Data_FAOSTAT, file=gzfile("./Output/ESB_2026_All_6.gz"),row.names=FALSE)
+write.csv(Data_FAOSTAT, file=gzfile("./Output/ESB_2026_All_7.gz"),row.names=FALSE)
 Data_FAOSTAT = filter(Data_FAOSTAT,`Element Code`%in%c(7275,7276,7280,7281,7282,7283,7290,7291,7292),`Item Code`%in%c(5078,5077,5076,5087,5089,5079,5080,5081,5082,5083,5086,5180,5088))
 
 # Take out the countries for which we have crop removal but no fertilizer data or fertilizer data is 0 (43 countries)
 # Also take out countries for which we have fertlizer data but no crop removal (1 country) 
 # List_Mask_Countries  = unique(c(unique(rbind(List_No_Fert_Yes_Production_1,List_Yes_Fert_No_Production_2)$Area.Code),c(List_Masked_Countries_Fert)))
-write.csv(Data_FAOSTAT,file=gzfile("./Output/ESB_Data_2026_6.gz"),row.names=FALSE)
+write.csv(Data_FAOSTAT,file=gzfile("./Output/ESB_Data_2026_7.gz"),row.names=FALSE)
 

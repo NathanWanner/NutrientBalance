@@ -10,7 +10,7 @@ library(dplyr)
   area_regions = read.csv("./Tables/areas_regions_hierarchy_With_China.csv")
   FAO_Country_Region = read.csv("./Tables/FAO_Country_Region.csv")
   
-  ESB_2026 = read.csv(gzfile("./Output/ESB_Data_2026_With_Former_Areas_6.gz"))
+  ESB_2026 = read.csv(gzfile("./Output/ESB_Data_2026_With_Former_Areas_7.gz"))
   # ESB_2026 = dplyr::select(ESB_2026,-Country,-X)
   ESB_2026 = dplyr::select(ESB_2026,-Country)
   ESB_2026$d.source = "ESB 2026"
@@ -27,6 +27,12 @@ library(dplyr)
   ESB_2025$Item[ESB_2025$Item=="Synthetic fertilizers"] = "Mineral fertilizers"
   ESB_2025$Item.Code[ESB_2025$Item.Code==5061] = 5087
   ESB_2025$Item.Code[ESB_2025$Item.Code==5062] = 5089
+  ESB_2025$Itrem.Code_temp = ESB_2025$Item.Code
+  ESB_2025$Itrem.Code_temp[ESB_2025$Item.Code==5082] = 5083
+  ESB_2025$Itrem.Code_temp[ESB_2025$Item.Code==5083] = 5082
+  ESB_2025$Item.Code = ESB_2025$Itrem.Code_temp
+  ESB_2025 = select(ESB_2025,-Itrem.Code_temp)
+  
   
   
   Data = rbind(ESB_2026,select(ESB_2025,Domain.Code,Domain,Area.Code,M49.Code,Country,Element.Code,Element,Item.Code,Item,Year.Code,Year,Unit,Value,Flag,d.source))

@@ -88,6 +88,15 @@ Fert_IFA = select(Fert_IFA,
                   ItemCode,
                   Year,
                   Value)
+# China aggregate IFA
+# Fert_IFA_China = Fert_IFA %>%
+#   filter(AreaCode%in%c(41,96,128,214)) %>%
+#   group_by(ItemCode,Year) %>%
+#   summarise(Value = sum(Value,na.rm=-TRUE)) %>%
+#   mutate(AreaCode=351) %>%
+#   ungroup() 
+# 
+# Fert_IFA = rbind(Fert_IFA,Fert_IFA_China)
 # NW:  Took out data tretatment for IFA data.  Many series now start from 
 # 2013 onwards
 # Fert IFA data is in 1000 tonnes
@@ -107,7 +116,7 @@ Fert_IFA = select(Fert_IFA,
 # Fert_IFA = Data_Update(StartYear,EndYear,rename(Fert_IFA,Area.Code=AreaCode,Item.Code=ItemCode))
 # Fert_IFA = rename(Fert_IFA,AreaCode=Area.Code,ItemCode=Item.Code)
 # Fert_IFA = select(Fert_IFA,-Item)
-Fert_IFA = inner_join(Fert_IFA,select(areas_regions_hierarchy_with_china,AreaCode),by=c("AreaCode"="AreaCode"))
+# Fert_IFA = inner_join(Fert_IFA,select(areas_regions_hierarchy,AreaCode),by=c("AreaCode"="AreaCode"))
 Fert_IFA = data.frame(Fert_IFA)
 Fert_IFA = Fert_IFA %>%
   mutate(Value_Fert_IFA = Value*1000*1000)

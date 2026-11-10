@@ -71,7 +71,7 @@ Manure_Pasture = rename(Manure_Pasture,
 # Here is 2026 version read from SWS
 
 Synthetic_Fert_key <- DatasetKey(domain = "ghg_emissions_at_farm_gate", 
-                         dataset = "ghg_emissions_from_crops_2026_silent_update", 
+                         dataset = "ghg_emissions_from_crops_2026_v2", 
                          dimensions = list(
                            geographicAreaM49 = Dimension(name = "geographicAreaM49", 
                                                          keys = c(GetCodeList("ghg_emissions_at_farm_gate", "ghg_emissions_from_crops_2026_silent_update", "geographicAreaM49")[type == "country", code],"159")), 

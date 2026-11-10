@@ -1,8 +1,14 @@
-current: production
-# current: qa
+# current: production
+current: qa
 
 production:
   server: https://sws.aws.fao.org:8181
   token: 0611b147-b902-4666-bd42-de33ce761ee7 # generic prod token
+
+qa:
+    server: https://sws.qa.aws.fao.org:8181 
+    # token: 51f2531e-5bdc-4efc-a154-4fb1d01c1cff # 21 sept 2026
+    # token: 2e13605c-64fd-491e-91f6-91c0e5e83b3e # 26 oct 2026
+    token: 817cc38a-06f0-489e-8d34-569b5085e32e # 26 oct 2026
 
   
