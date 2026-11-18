@@ -23,7 +23,7 @@ Land_Use = Data_Update(StartYear,EndYear,Land_Use)
 Land_Use = dplyr::select(Land_Use,-Item.Code)
 Land_Use = dplyr::rename(Land_Use,Area=Item,CropLand=Value)
 
-ESB_2026 = read.csv(gzfile("./Output/ESB_Data_2026_7.gz"))
+ESB_2026 = read.csv(gzfile("./Output/ESB_Data_2026_8.gz"))
 # ESB_2026 = select(ESB_2026,-X)
 ESB_2026 = filter(ESB_2026,Element%in%c("Cropland nitrogen","Cropland phosphorus","Cropland potassium"))
 Land_Use = select(Land_Use,-Area)
@@ -249,12 +249,20 @@ ESB_2026_Former_Areas_Totals_1 = ESB_2026_Former_Areas_Totals %>%
   dplyr::filter(Item%in%c("Atmospheric Deposition","Biological Fixation","Seed","Mineral fertilizers","Manure applied to soils"),
                 Element%in%c("Cropland nitrogen","Cropland phosphorus","Cropland potassium")) %>%
   dplyr::group_by(Domain,Domain.Code,Area.Code,Element.Code,Element,Year.Code,Year) %>%
-  dplyr::summarise(Value = sum(Value,na.rm=TRUE),
-                   Value_Area = sum(Value,na.rm=TRUE)/sum(CropLand,na.rm=TRUE)) %>%
+  dplyr::summarise(Value = sum(Value,na.rm=TRUE)) %>%
   ungroup() %>%
   mutate(Flag = "E",
          Item.Code = 5079,
          Item = "Inputs (Total)")
+
+ESB_2026_Former_Areas_Totals_1 = left_join(ESB_2026_Former_Areas_Totals_1,Land_Use,by=c("Area.Code","Year"))
+ESB_2026_Former_Areas_Totals_1 = ESB_2026_Former_Areas_Totals_1 %>%
+  rowwise() %>%
+  mutate(Value_Area = Value/CropLand) %>%
+  ungroup()
+
+ESB_2026_Former_Areas_Totals_1 = select(ESB_2026_Former_Areas_Totals_1,-CropLand)
+
 ESB_2026_Former_Areas_Totals_1 = gather(ESB_2026_Former_Areas_Totals_1,Boundary,Value,Value,Value_Area)
 ESB_2026_Former_Areas_Totals_1$Element[ESB_2026_Former_Areas_Totals_1$Boundary=="Value_Area"&ESB_2026_Former_Areas_Totals_1$Element=="Cropland nitrogen"] = "Cropland nitrogen per unit area"
 ESB_2026_Former_Areas_Totals_1$Element[ESB_2026_Former_Areas_Totals_1$Boundary=="Value_Area"&ESB_2026_Former_Areas_Totals_1$Element=="Cropland phosphorus"] = "Cropland phosphorus per unit area"
@@ -319,7 +327,7 @@ ESB_2026_Former_Areas$Unit[ESB_2026_Former_Areas$`Element.Code`%in%c(7276,7281,7
 ESB_2026_Former_Areas$Unit[ESB_2026_Former_Areas$`Element.Code`%in%c(7290,7291,7292)] = "%"
 ESB_2026_Former_Areas = left_join(ESB_2026_Former_Areas,select(m49,Country.Code,M49.Code,Country),by=c("Area.Code"="Country.Code"))
 
-ESB_2026 = read.csv(gzfile("./Output/ESB_Data_2026_7.gz"))
+ESB_2026 = read.csv(gzfile("./Output/ESB_Data_2026_8.gz"))
 # ESB_2026 = select(ESB_2026,-X)
 ESB_2026 = rbind(ESB_2026,select(ESB_2026_Former_Areas,colnames(ESB_2026)))
-write.csv(ESB_2026,gzfile("./Output/ESB_Data_2026_With_Former_Areas_7.gz"),row.names=FALSE)
+write.csv(ESB_2026,gzfile("./Output/ESB_Data_2026_With_Former_Areas_8.gz"),row.names=FALSE)
